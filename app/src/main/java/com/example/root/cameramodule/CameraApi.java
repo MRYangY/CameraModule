@@ -199,6 +199,10 @@ public class CameraApi implements Camera.PreviewCallback {
         }
     }
 
+    public void addCallbackBuffer(byte[] bytes){
+        mCamera.addCallbackBuffer(bytes);
+    }
+
     /**
      * preview frame data callback
      *
