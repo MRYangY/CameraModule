@@ -1,6 +1,8 @@
 package com.example.root.cameramodule;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.Log;
@@ -15,8 +17,8 @@ import java.util.List;
 public class CameraApi implements Camera.PreviewCallback {
     private static final String TAG = "CameraApi";
     private static volatile CameraApi CAMERA_INSTANCE = null;
-    private static final int CAMERA_INDEX_BACK = 0;
-    private static final int CAMERA_INDEX_FRONT = 1;
+    public static final int CAMERA_INDEX_BACK = 0;
+    public static final int CAMERA_INDEX_FRONT = 1;
     private final int DEFAULT_FPS = 30;
     private final int DEFAULT_PREVIEW_WIDTH = 1920;
     private final int DEFAULT_PREVIEW_HEIGHT = 1080;
@@ -86,7 +88,15 @@ public class CameraApi implements Camera.PreviewCallback {
 
 
     public synchronized void initCamera(Context context, ICameraApiCallback cameraApiCallback) {
+        this.context = context;
+        this.cameraApiCallback = cameraApiCallback;
         if (mCamera == null) {
+            if (context.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (this.cameraApiCallback != null) {
+                    this.cameraApiCallback.onNotSupportErrorTip("no permission");
+                    return;
+                }
+            }
             int cameraNumber = Camera.getNumberOfCameras();
             if (cameraNumber == 0) {
                 Log.e(TAG, "initCamera: This Devices is no Camera");
@@ -94,8 +104,6 @@ public class CameraApi implements Camera.PreviewCallback {
             }
             mCamera = Camera.open(mCameraId);
         }
-        this.context = context;
-        this.cameraApiCallback = cameraApiCallback;
     }
 
 

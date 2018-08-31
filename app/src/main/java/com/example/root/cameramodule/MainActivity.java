@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private boolean isCheckPermissionOk = false;
 
     private SurfaceView mSurfaceView;
+    private ViewGroup.LayoutParams layoutParams;
 
     private int previewWidth = 1920;
     private int previewHeight = 1080;
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private int mSurfaceViewWidth;
     private int mSurfaceViewHeight;
-    private ViewGroup.LayoutParams layoutParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     public void surfaceCreated(SurfaceHolder holder) {
         if (isCheckPermissionOk) {
             Log.e(TAG, "surfaceCreated: ");
-            CameraApi.getInstance().setCameraId(0);
+            CameraApi.getInstance().setCameraId(CameraApi.CAMERA_INDEX_BACK);
             CameraApi.getInstance().initCamera(this, this);
             CameraApi.getInstance().setPreviewSize(new Size(previewWidth, previewHeight));
             CameraApi.getInstance().setFps(30).configCamera();
