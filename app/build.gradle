@@ -1,9 +1,17 @@
-apply plugin: 'com.android.application'
+if (isRunAlone.toBoolean()){
+    apply plugin: 'com.android.application'
+
+}else {
+    apply plugin: 'com.android.library'
+}
 
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.root.cameramodule"
+        if (isRunAlone.toBoolean()){
+
+            applicationId "com.example.root.cameramodule"
+        }
         minSdkVersion 23
         targetSdkVersion 27
         versionCode 1
@@ -14,6 +22,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets{
+        main {
+            if(isRunAlone.toBoolean()){
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+            }else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
         }
     }
 }
