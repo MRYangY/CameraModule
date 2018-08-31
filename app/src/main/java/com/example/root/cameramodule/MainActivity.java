@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -68,8 +69,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     public void surfaceCreated(SurfaceHolder holder) {
         if (isCheckPermissionOk) {
             Log.e(TAG, "surfaceCreated: ");
+            CameraApi.getInstance().setCameraId(0);
             CameraApi.getInstance().initCamera(this, this);
-            CameraApi.getInstance().configCamera();
+            CameraApi.getInstance().setPreviewSize(new Size(previewWidth, previewHeight));
+            CameraApi.getInstance().setFps(30).configCamera();
         }
     }
 
@@ -78,9 +81,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         ratio = (float) (previewWidth) / (float) (previewHeight);
         layoutParams = mSurfaceView.getLayoutParams();
         if (mSurfaceViewHeight > mSurfaceViewWidth) {
-
+            //竖屏
             mSurfaceViewHeight = (int) (mSurfaceViewWidth * ratio);
         } else {
+            //横屏
             mSurfaceViewWidth = (int) (mSurfaceViewHeight * ratio);
         }
 
