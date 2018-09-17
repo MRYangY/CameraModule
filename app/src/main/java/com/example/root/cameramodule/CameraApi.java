@@ -31,6 +31,7 @@ public class CameraApi implements Camera.PreviewCallback {
     private int mPreviewWidth = DEFAULT_PREVIEW_WIDTH;
     private int mPreviewHeight = DEFAULT_PREVIEW_HEIGHT;
     private int fps = DEFAULT_FPS;
+    private int mRotation;
 
     private Context context;
     private ICameraApiCallback cameraApiCallback;
@@ -176,9 +177,11 @@ public class CameraApi implements Camera.PreviewCallback {
         //根据前置与后置摄像头的不同，设置预览方向，否则会发生预览图像倒过来的情况。
         if (cameraInfo.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
             displayRotation = (cameraInfo.orientation + degrees) % 360;
+            mRotation = displayRotation;
             displayRotation = (360 - displayRotation) % 360; // compensate
         } else {
             displayRotation = (cameraInfo.orientation - degrees + 360) % 360;
+            mRotation = displayRotation;
         }
         this.mCamera.setDisplayOrientation(displayRotation);
     }
@@ -198,6 +201,10 @@ public class CameraApi implements Camera.PreviewCallback {
             mCamera.release();
             mCamera = null;
         }
+    }
+
+    public int getRotation(){
+        return mRotation / 90;
     }
 
     public void addCallbackBuffer(byte[] bytes){
